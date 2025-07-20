@@ -3,11 +3,15 @@ from flask_cors import CORS
 from database import db_connect
 import logging
 import requests
+import os
 
 app = Flask(__name__)
 CORS(app)
 
 logging.basicConfig(level=logging.INFO)
+
+# Fetch API key from environment variable
+ARKESEL_API_KEY = os.getenv("ARKESEL_API_KEY", "your-default-api-key")
 
 def send_sms(phone_number, message):
     url = "https://sms.arkesel.com/api/v2/send-sms"
@@ -17,7 +21,7 @@ def send_sms(phone_number, message):
         "recipients": [phone_number],
     }
     headers = {
-        "api-key": "cEdMYkZJRmRqSm1JYVF6UG1Ib1I",
+        "api-key": ARKESEL_API_KEY,
         "Content-Type": "application/json"
     }
 
@@ -72,10 +76,7 @@ def ussd():
                 message = f"Hi {name}, your result is: {result}"
 
                 success = send_sms(phone, message)
-                if success:
-                    response = SMS_SENT
-                else:
-                    response = SMS_FAILED
+                response = SMS_SENT if success else SMS_FAILED
             else:
                 response = NO_RECORD
 
@@ -93,5 +94,6 @@ def ussd():
 
 if __name__ == '__main__':
     app.run(debug=True, port=5001)
+
 
        
