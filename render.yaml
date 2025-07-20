@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: ttu-resu
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn app:app"
+    envVars:
+      - key: ARKESEL_API_KEY
+        value: cEdMYkZJRmRqSm1JYVF6UG1Ib1I
